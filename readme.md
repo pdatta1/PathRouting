@@ -8,20 +8,28 @@
 - The project follows a structured design using the Strategy and Factory design patterns to manage algorithm logic. This architecture allows for future algorithms to be easily introduced and integrated while maintaining consistency across the project.
 
 **Directory Structure**
-- src/
-    - └── algo/
-        ├── routings/
-        │   └── a_star.py  # The first routing algorithm implemented using the PathRoutingBase Protocol (Strategy Pattern)
-        ├── __init__.py    # Initialization of algo package
-        └── utils.py       # Helper and utility files supporting the algorithms
-    - └── algo_exceptions/
-        └── custom_exceptions.py  # Custom exceptions needed for path routing algorithms
-    - └── algo_types/
-        └── types.py  # Custom types, dataclasses, and structures for enhanced code readability and maintainability
-    - └── base/
-        └── protocols.py  # Base abstract classes (Protocols) for maintaining structured design patterns
-    - └── tester/
-        └── test_cases.py  # Playground for experimenting and testing routing algorithms
+- src: 
+    **algo**
+    - The algo directory consists of routing algorithm files/classes
+        **routings**
+        - This is where the routing algorithms are stored, currently a_star.py is the first simple algorithm that uses the PathRoutingBase Protocol (Strategy Pattern).
+        - When other algorithms are introduced, we inherit the PauthRoutingBase Protocol
+        
+        **files in main directory**
+        - Files in algo directory are helpers, utilities files.
+
+    **algo_exceptions**
+    - This directory consists of customs exceptions needed for the path routing algorithms
+
+    **algo_types**
+    - This directionry consists of custom types, dataclasses, etc.
+    - This keeps the code more understandable using types and structural
+
+    **base**
+    - This directory consists of base protocol abstract classes that can be inherit to maintain a structural design protocol.
+
+    **tester**
+    - This is where the messy fun is done, we create playground code, test files, etc.
 
 **How to Use**
 Clone the repository.
