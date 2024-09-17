@@ -9,34 +9,39 @@ class AisleDirections(DirectionProtocol):
     are restricted to vertical movements (up and down).
     """
 
-    def get_directions(self) -> List[Tuple[int, int]]:
+    def get_directions(self) -> List[Tuple[int, int, int]]:
         """
-        Provides the movement directions for aisle nodes. Aisles allow movement 
-        only in the vertical direction (up and down).
+        Provides the movement directions for aisle nodes. Aisles allow movement right, left, down, up.
 
         Returns:
-            List[Tuple[int, int]]: A list of direction tuples. Each tuple represents
-            the change in x and y coordinates.
+            List[Tuple[int, int, int]]: A list of direction tuples. Each tuple represents
+            the change in x and y coordinates and z coordinates.
         """
-        return [(0, 1), (0, -1)]  # Up (0, 1), Down (0, -1)
+        return [(0, 1, 0), (0, -1, 0)] 
 
 class LaneDirections(DirectionProtocol):
     """
     LaneDirections is a concrete implementation of the DirectionProtocol.
-    It defines the valid movement directions for nodes of type 'Lane', which 
-    are restricted to horizontal movements (left and right).
+    It defines the valid movement directions for nodes of type 'Lane' (left, right, up, down).
     """
 
-    def get_directions(self) -> List[Tuple[int, int]]:
+    def get_directions(self) -> List[Tuple[int, int, int]]:
         """
         Provides the movement directions for lane nodes. Lanes allow movement 
         only in the horizontal direction (left and right).
 
         Returns:
-            List[Tuple[int, int]]: A list of direction tuples. Each tuple represents
+            List[Tuple[int, int, int]]: A list of direction tuples. Each tuple represents
             the change in x and y coordinates.
         """
-        return [(1, 0), (-1, 0)]  # Right (1, 0), Left (-1, 0)
+        return [(1, 0, 0), (-1, 0, 0)] 
+    
+
+class ElevationDirections(DirectionProtocol): 
+
+    def get_directions(self) -> List[Tuple[int]]:
+        return ((1, 0, 0), (-1, 0, 0))
+    
 
 class RouteDirectionFactory:
     """
@@ -93,3 +98,10 @@ class RouteDirectionFactory:
                                           to their respective direction protocol instances.
         """
         return self.__direction_registry
+    
+
+    def get_all_directions(self) -> List[Tuple]: 
+        all_directions: List[Tuple] = [] 
+        for directions in self.__direction_registry.values(): 
+            all_directions.append(directions.get_directions())
+        return tuple(all_directions)

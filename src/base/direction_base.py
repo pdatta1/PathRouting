@@ -11,7 +11,7 @@ class DirectionProtocol(ABC):
     """
 
     @abstractmethod
-    def get_directions(self) -> List[Tuple[int, int]]:
+    def get_directions(self) -> List[Tuple[int, int, int]]:
         """
         Abstract method to retrieve the movement directions allowed for a node.
 

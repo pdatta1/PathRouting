@@ -1,10 +1,22 @@
 from typing import List, Tuple, Dict
 from base.routing_base import PathRoutingBase
-from base.direction_base import RouteDirectionFactory
-from algo.directions import AisleDirections, LaneDirections
-from algo_types.map_types import Map, Node
-from algo_exceptions.route_exceptions import PathNotFoundException
+from algo.directions import RouteDirectionFactory
+from algo.directions import (
+    AisleDirections, 
+    LaneDirections,
+    ElevationDirections
+)
+from algo_types.map_types import Map, Node, Path
+from algo_types.map_interfaces import MapNodeTypes
+from algo_exceptions.route_exceptions import (
+    PathNotFoundException, 
+    VTUNotFound,
+    NotSameLevelRoutingException
+)
+
 import heapq
+import time 
+from collections import deque
 
 class AstarRouting(PathRoutingBase):
     """
@@ -32,8 +44,9 @@ class AstarRouting(PathRoutingBase):
         and Lane navigation. This allows the class to handle different movement
         behaviors based on node types.
         """
-        self._direction_registry_factory.register_direction_protocol('Aisle', AisleDirections())
-        self._direction_registry_factory.register_direction_protocol('Lane', LaneDirections())
+        self._direction_registry_factory.register_direction_protocol(MapNodeTypes.Aisle.value, AisleDirections())
+        self._direction_registry_factory.register_direction_protocol(MapNodeTypes.Lane.value, LaneDirections())
+        self._direction_registry_factory.register_direction_protocol(MapNodeTypes.VTU.value, ElevationDirections())
 
     def heuristic(self, current_node: Node, target_node: Node) -> int:
         """
@@ -47,7 +60,7 @@ class AstarRouting(PathRoutingBase):
         Returns:
             int: The heuristic distance from the current node to the target node.
         """
-        return abs(current_node.coords.x - target_node.coords.x) + abs(current_node.coords.y - target_node.coords.y)
+        return abs(current_node.coords.x - target_node.coords.x) + abs(current_node.coords.y - target_node.coords.y) + abs(current_node.coords.z - target_node.coords.z)
 
     def get_neighbors(self, node: Node) -> List[Node]:
         """
@@ -63,20 +76,20 @@ class AstarRouting(PathRoutingBase):
         """
         neighbors: List[Node] = []
 
-        # Retrieve the direction protocol based on the node's type
         direction_protocol = self._direction_registry_factory.get_direction_protocol(node.node_type)
         directions = direction_protocol.get_directions()
 
         # Calculate neighbors based on valid movement directions
         for direction in directions:
-            neighbor_coords: Tuple[int, int] = (node.coords.x + direction[0], node.coords.y + direction[1])
-            if 0 <= neighbor_coords[0] < self._map.lanes_nums and 0 <= neighbor_coords[1] < self._map.aisle_nums:
-                neighbor: Node = self._map.get_node_by_coords(neighbor_coords[0], neighbor_coords[1])
-                neighbors.append(neighbor)
-        
+
+            neighbor_coords: Tuple[int, int] = (node.coords.x + direction[0], node.coords.y + direction[1], node.coords.z + direction[2])
+            if 0 <= neighbor_coords[0] < self._map.lanes_nums and 0 <= neighbor_coords[1] < self._map.aisle_nums and neighbor_coords[2] < self._map.level_nums :
+                neighbor: Node = self._map.get_node_by_coords(neighbor_coords[0], neighbor_coords[1], neighbor_coords[2])
+                if neighbor:
+                    neighbors.append(neighbor)
         return neighbors
 
-    def find_path(self, current_node: Node, target_node: Node) -> List[Node]:
+    def find_path_on_same_level(self, current_node: Node, target_node: Node) -> Path:
         """
         Implements the A* pathfinding algorithm to find the optimal path from 
         the current node to the target node.
@@ -97,14 +110,26 @@ class AstarRouting(PathRoutingBase):
         node_relations: Dict[str, Node] = {}  # Dictionary to store node relationships (for path reconstruction)
         g_score: Dict[str, int] = {current_node.id: 0}  # Cost from start node to each node
 
-        heapq.heappush(open_list, (0, current_node))  # Push starting node to open list
+        total_compute_time: float = 0.0
 
+        if current_node.coords.z != target_node.coords.z: 
+            raise NotSameLevelRoutingException("you are using a method that restricts routing on the same level.")
+
+        heapq.heappush(open_list, (0, current_node))  # Push starting node to open list
+        
+        start_time_compute: float = time.perf_counter()
         while open_list:
             _, current_node = heapq.heappop(open_list)  # Pop node with lowest f-score
 
             # Check if we have reached the target node
             if current_node.id == target_node.id:
-                return self.reconstruct_path(node_relations, current_node)
+                end_time_compute: float = time.perf_counter()
+                total_compute_time = end_time_compute - start_time_compute
+                constructed_path: List[Node] = self.reconstruct_path(node_relations, current_node)
+                return Path(
+                    nodes=constructed_path,
+                    computation_time=total_compute_time
+                )
 
             closed_list.add(current_node.id)  # Mark current node as evaluated
 
@@ -116,7 +141,7 @@ class AstarRouting(PathRoutingBase):
                 tentative_g_score = g_score[current_node.id] + 1  # Cost to reach neighbor
 
                 # Update g-score if this path is better or not explored
-                if neighbor.id not in g_score or tentative_g_score < g_score[neighbor.id]:
+                if  neighbor.id not in g_score or tentative_g_score < g_score[neighbor.id]:
                     node_relations[neighbor.id] = current_node
                     g_score[neighbor.id] = tentative_g_score
                     f_score: int = tentative_g_score + self.heuristic(neighbor, target_node)
@@ -124,6 +149,27 @@ class AstarRouting(PathRoutingBase):
 
         # If no path found, raise an exception
         raise PathNotFoundException(f"Path from {current_node.coords} to {target_node.coords} is not possible")
+    
+    def find_path(self, current_node: Node, target_node: Node) -> List[Node]:
+        return super().find_path(current_node, target_node)
+
+    def find_closest_vtu(self, start_node: Node) -> Node: 
+        visited = set() 
+        queue = deque([start_node])
+
+        while queue: 
+            current_node = queue.popleft()
+            if current_node.node_type == MapNodeTypes.VTU.value: 
+                return current_node
+            
+            visited.add(current_node.id)
+
+            neighbors = self.get_neighbors(current_node)
+            for neighbor in neighbors: 
+                if neighbor.id not in visited and neighbor not in queue: 
+                    queue.append(neighbor)
+        
+        return VTUNotFound(f"No VTU found near the current node")
 
     def reconstruct_path(self, node_relations: Dict[Node, Node], current_node: Node) -> List[Node]:
         """

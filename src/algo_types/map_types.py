@@ -1,10 +1,10 @@
-from typing import Literal, Dict, Union
+from typing import Literal, Dict, Union, List 
 from dataclasses import dataclass, field, MISSING
 import uuid
 from uuid import UUID
 
 # Define the allowed node types
-NodeTypes = Literal["Aisle", "Lane"]
+NodeTypes = Literal["Aisle", "Lane", "VTU"]
 
 @dataclass
 class Coords:
@@ -17,6 +17,7 @@ class Coords:
     """
     x: int = field(default=MISSING)
     y: int = field(default=MISSING)
+    z: int = field(default=MISSING)
 
     def __eq__(self, value: object) -> bool:
         """
@@ -30,7 +31,7 @@ class Coords:
         """
         if not isinstance(value, Coords):
             raise NotImplemented
-        return self.x == value.x and self.y == value.y
+        return self.x == value.x and self.y == value.y and self.z == value.z
 
 @dataclass
 class Node:
@@ -89,7 +90,7 @@ class Node:
         Returns:
             bool: True if this node's x or y coordinate is smaller, otherwise False.
         """
-        return self.coords.x < other.coords.x or self.coords.y < other.coords.y
+        return self.coords.x < other.coords.x or self.coords.y < other.coords.y or self.coords.z < other.coords.z 
 
 
 @dataclass(frozen=True)
@@ -105,10 +106,11 @@ class Map:
     """
     lanes_nums: int
     aisle_nums: int
+    level_nums: int 
     map_id: str
     coordinates: Dict[str, Node] = field(default_factory=dict)
 
-    def get_node_by_coords(self, x: int, y: int) -> Union[Node, None]:
+    def get_node_by_coords(self, x: int, y: int, z: int) -> Union[Node, None]:
         """
         Retrieves a node based on its coordinates (x, y).
 
@@ -120,8 +122,9 @@ class Map:
             Node or None: The Node object if found, otherwise None.
         """
         for value in self.coordinates.values():
-            if value.coords.x == x and value.coords.y == y:
+            if value.coords.x == x and value.coords.y == y and z == value.coords.z:
                 return value
+            
 
     def get_node_by_id(self, node_id: str) -> Union[Node, None]:
         """
@@ -141,6 +144,13 @@ class Map:
             raise KeyError(f"Node doesn't exist in Map with Id: {node_id}")
         return node
 
+    def get_nodes_by_types(self, node_type: str) -> List[Node]: 
+        nodes_to_return: List[Node] = []
+        for node in self.coordinates.values(): 
+            if node.node_type == node_type: 
+                nodes_to_return.append(node)   
+        return nodes_to_return       
+
     def get_map_length(self) -> int:
         """
         Returns the total number of nodes on the map.
@@ -149,3 +159,9 @@ class Map:
             int: The number of nodes in the map.
         """
         return len(self.coordinates)
+
+
+@dataclass
+class Path: 
+    nodes: List[Node]
+    computation_time: float 
