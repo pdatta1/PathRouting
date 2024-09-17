@@ -1,6 +1,7 @@
 from typing import * 
 
 from dataclasses import dataclass, field, MISSING
+
 from mapper.map_types.mapper_types import * 
 from mapper.map_types.mapper_objects_types import *
 from mapper.map_types.mapper_interfaces import MapEntityTypes
@@ -30,6 +31,12 @@ class Entity:
                         )
                     )
 
+    def remove_entity(self, entity_id: str, entity_type: str) -> None: 
+        for key, value in self.entities.items(): 
+            if key == entity_type: 
+                for entity_to_remove in value: 
+                    if entity_to_remove.entity_id == entity_id: 
+                        value.remove(entity_to_remove)
 
     def get_entity(self, entity_id: str, entity_type: str) -> Union[MapEntity, None]: 
         for key, value in self.entities.items(): 
