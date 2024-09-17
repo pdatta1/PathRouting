@@ -4,45 +4,54 @@
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="htQbeDeT_L-1Aka0YROk-11" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="htQbeDeT_L-1Aka0YROk-3">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="400" y="150" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
         <mxCell id="htQbeDeT_L-1Aka0YROk-3" value="Path Planning &amp;amp; Routing Algorithm" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#000000;" vertex="1" parent="1">
           <mxGeometry x="265" y="10" width="270" height="80" as="geometry" />
         </mxCell>
         <mxCell id="htQbeDeT_L-1Aka0YROk-8" value="Database" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#000000;strokeColor=#b85450;" vertex="1" parent="1">
-          <mxGeometry x="350" y="700" width="130" height="160" as="geometry" />
+          <mxGeometry x="250" y="680" width="130" height="160" as="geometry" />
         </mxCell>
-        <mxCell id="htQbeDeT_L-1Aka0YROk-14" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="htQbeDeT_L-1Aka0YROk-12" target="htQbeDeT_L-1Aka0YROk-13">
+        <mxCell id="htQbeDeT_L-1Aka0YROk-32" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="htQbeDeT_L-1Aka0YROk-12" target="htQbeDeT_L-1Aka0YROk-3">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="htQbeDeT_L-1Aka0YROk-12" value="Map-Context" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#000000;" vertex="1" parent="1">
           <mxGeometry x="350" y="150" width="100" height="110" as="geometry" />
         </mxCell>
-        <mxCell id="htQbeDeT_L-1Aka0YROk-22" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.25;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="htQbeDeT_L-1Aka0YROk-13" target="htQbeDeT_L-1Aka0YROk-21">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
         <mxCell id="htQbeDeT_L-1Aka0YROk-13" value="Fleet-Management&lt;div&gt;(robot coordinations)&lt;/div&gt;" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;fillColor=#000000;strokeColor=#82b366;" vertex="1" parent="1">
           <mxGeometry x="170" y="320" width="225" height="105" as="geometry" />
-        </mxCell>
-        <mxCell id="htQbeDeT_L-1Aka0YROk-23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="htQbeDeT_L-1Aka0YROk-17" target="htQbeDeT_L-1Aka0YROk-21">
-          <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="htQbeDeT_L-1Aka0YROk-17" value="Device-Management&lt;div&gt;(vtus, chargers, etc)&lt;/div&gt;" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;fillColor=#000000;strokeColor=#82b366;" vertex="1" parent="1">
           <mxGeometry x="425" y="320" width="225" height="105" as="geometry" />
         </mxCell>
-        <mxCell id="htQbeDeT_L-1Aka0YROk-19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.444;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="htQbeDeT_L-1Aka0YROk-12" target="htQbeDeT_L-1Aka0YROk-17">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="htQbeDeT_L-1Aka0YROk-25" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="htQbeDeT_L-1Aka0YROk-21">
+        <mxCell id="htQbeDeT_L-1Aka0YROk-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="htQbeDeT_L-1Aka0YROk-21">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="410" y="700" as="targetPoint" />
+            <mxPoint x="270" y="430" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="htQbeDeT_L-1Aka0YROk-27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="htQbeDeT_L-1Aka0YROk-21" target="htQbeDeT_L-1Aka0YROk-17">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="410" y="462" />
+              <mxPoint x="538" y="462" />
+            </Array>
           </mxGeometry>
         </mxCell>
         <mxCell id="htQbeDeT_L-1Aka0YROk-21" value="Task-Management&lt;div&gt;(task for robots, vtu, chargers, etc)&lt;/div&gt;" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;fillColor=#000000;strokeColor=#82b366;" vertex="1" parent="1">
           <mxGeometry x="270" y="498" width="280" height="105" as="geometry" />
+        </mxCell>
+        <mxCell id="htQbeDeT_L-1Aka0YROk-30" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="htQbeDeT_L-1Aka0YROk-17" target="htQbeDeT_L-1Aka0YROk-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="htQbeDeT_L-1Aka0YROk-31" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.42;entryY=0.991;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="htQbeDeT_L-1Aka0YROk-13" target="htQbeDeT_L-1Aka0YROk-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="htQbeDeT_L-1Aka0YROk-34" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="htQbeDeT_L-1Aka0YROk-33" target="htQbeDeT_L-1Aka0YROk-21">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="htQbeDeT_L-1Aka0YROk-33" value="API/EntryPoints" style="rhombus;whiteSpace=wrap;html=1;strokeColor=#82b366;fillColor=#d5e8d4;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="470" y="680" width="150" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="htQbeDeT_L-1Aka0YROk-35" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="htQbeDeT_L-1Aka0YROk-33" target="htQbeDeT_L-1Aka0YROk-8">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
