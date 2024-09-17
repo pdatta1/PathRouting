@@ -1,0 +1,36 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.7.8 Chrome/128.0.6613.36 Electron/32.0.1 Safari/537.36" version="24.7.8">
+  <diagram name="Page-1" id="ACdwdeDnSFW97IfOf14E">
+    <mxGraphModel dx="1224" dy="896" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="htQbeDeT_L-1Aka0YROk-11" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="htQbeDeT_L-1Aka0YROk-3">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="400" y="150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="htQbeDeT_L-1Aka0YROk-3" value="Path Planning &amp;amp; Routing Algorithm" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;" vertex="1" parent="1">
+          <mxGeometry x="265" y="10" width="270" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="htQbeDeT_L-1Aka0YROk-8" value="Database" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="1">
+          <mxGeometry x="10" y="240" width="100" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="htQbeDeT_L-1Aka0YROk-14" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="htQbeDeT_L-1Aka0YROk-12" target="htQbeDeT_L-1Aka0YROk-13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="htQbeDeT_L-1Aka0YROk-12" value="Map-Context" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="1">
+          <mxGeometry x="350" y="150" width="100" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="htQbeDeT_L-1Aka0YROk-13" value="Fleet-Management" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;" vertex="1" parent="1">
+          <mxGeometry x="287.5" y="320" width="225" height="105" as="geometry" />
+        </mxCell>
+        <mxCell id="htQbeDeT_L-1Aka0YROk-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0;entryDx=0;entryDy=35;entryPerimeter=0;" edge="1" parent="1" source="htQbeDeT_L-1Aka0YROk-12" target="htQbeDeT_L-1Aka0YROk-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="htQbeDeT_L-1Aka0YROk-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="htQbeDeT_L-1Aka0YROk-13" target="htQbeDeT_L-1Aka0YROk-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
