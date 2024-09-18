@@ -2,7 +2,7 @@
 import random 
 import time 
 
-from generate_map import generate_map
+from tester.builders_testers.generate_map import generate_map
 from algo.routings.a_star import AstarRouting
 from mapper.map_types.mapper_interfaces import MapNodeTypes
 
