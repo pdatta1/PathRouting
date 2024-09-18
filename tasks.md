@@ -10,3 +10,4 @@ Routing Single Floor Bias:
         - robots
         - pallets
         - etc
+        these will be mapped by the mapper, and handled by the mapper.
