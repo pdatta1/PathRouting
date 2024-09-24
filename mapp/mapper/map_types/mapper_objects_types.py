@@ -3,7 +3,7 @@ from typing import *
 
 from dataclasses import dataclass, field, MISSING
 
-from algo.algo_types.map_types import Node
+from mapp.algo.algo_types.map_types import Node
 
 @dataclass
 class MapEntity: 

@@ -49,8 +49,16 @@ class Node:
     node_type: NodeTypes = field(default=MISSING, compare=False)
     id: str = field(default=MISSING, compare=True)
     uuid: str = field(default=MISSING, compare=False)
+    connections: List['Node'] = field(default_factory=list) 
 
-    def __init__(self, id: str, node_type: NodeTypes, coords: Coords) -> None:
+
+    def __init__(
+            self, 
+            id: str, 
+            node_type: NodeTypes, 
+            coords: Coords,
+            connections: List['Node'] = [] 
+        ) -> None:
         """
         Initializes the Node with an id, node_type, and coordinates.
         
@@ -64,6 +72,10 @@ class Node:
         object.__setattr__(self, 'node_type', node_type)
         object.__setattr__(self, 'coords', coords)
         object.__setattr__(self, 'uuid', id)
+        object.__setattr__(self, 'connections', connections)
+
+    def add_connection(self, connections: List['Node']):
+        self.connections = connections
 
     def __eq__(self, value: object) -> bool:
         """

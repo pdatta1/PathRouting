@@ -2,25 +2,25 @@
 import random 
 import time 
 
-from tester.builders_testers.generate_map import generate_map
-from algo.routings.a_star import AstarRouting
-from mapper.map_types.mapper_interfaces import MapNodeTypes
+from mapp.tester.builders_testers.generate_map import generate_map
+from mapp.algo.routings.a_star import AstarRouting
+from mapp.mapper.map_types.mapper_interfaces import MapNodeTypes
 
-grid_map = generate_map(50, 50, 10)
+grid_map = generate_map(10, 1)
 astar = AstarRouting(grid_map)
 
 def test_generate_paths(): 
     
     start_node = grid_map.get_node_by_coords(x=0, y=0, z=0)
-    end_node = grid_map.get_node_by_coords(x=10, y=8, z=5)
+    end_node = grid_map.get_node_by_coords(x=9, y=2, z=0)
 
     print("Map Attributes: ")
     print(f"Aisles: {grid_map.aisle_nums} | Lanes: {grid_map.lanes_nums}")
     
     print("--------------------------------------------------------------------------")
 
-    print(f"start node: {start_node}")
-    print(f"end node: {end_node}")
+    print(f"start node: {start_node.coords}")
+    print(f"end node: {end_node.coords}")
 
     print("--------------------------------------------------------------------------")
 
@@ -30,8 +30,8 @@ def test_generate_paths():
     print(f"computation time: {path.computation_time:.6f} seconds")
     print("--------------------------------------------------------------------------")
 
-    for node in path.nodes: 
-        print(node)
+    # for node in path.nodes: 
+    #     print(node)
 
 
 def test_get_all_vtus(): 
@@ -82,8 +82,14 @@ def test_route_from_vtu_to_path():
         for node in path.nodes: 
             print(node)
 
-
-
+def test_none_node(): 
+    for x in range(grid_map.lanes_nums):  # Iterate through lanes, not aisles
+        for i in range(grid_map.aisle_nums): 
+            for j in range(grid_map.level_nums): 
+                node = grid_map.get_node_by_coords(x, i, j)
+                if node is None: 
+                    print(f"None Node detected at {x}, {i}, {j}")
 
 if __name__ == '__main__': 
-    test_route_from_vtu_to_path() 
+    # test_none_node()
+    test_generate_paths() 

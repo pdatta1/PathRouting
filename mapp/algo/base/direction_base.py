@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import List, Tuple
-from algo.algo_types.map_types import Node
+from mapp.algo.algo_types.map_types import Node
 
 class DirectionProtocol(ABC):
     """

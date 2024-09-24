@@ -2,10 +2,10 @@ from typing import *
 
 from dataclasses import dataclass, field, MISSING
 
-from mapper.map_types.mapper_types import * 
-from mapper.map_types.mapper_objects_types import *
+from mapp.mapper.map_types.mapper_types import * 
+from mapp.mapper.map_types.mapper_objects_types import *
 
-from algo.algo_types.map_types import Map 
+from mapp.algo.algo_types.map_types import Map 
 
 
 @dataclass

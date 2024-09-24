@@ -2,9 +2,9 @@
 from typing import * 
 from abc import ABC, abstractmethod
 
-from mapper.map_types.mapper_types import Entity 
+from mapp.mapper.map_types.mapper_types import Entity 
 
-from algo.base.routing_base import PathRoutingBase
+from mapp.algo.base.routing_base import PathRoutingBase
 
 
 class MapperBase(ABC): 

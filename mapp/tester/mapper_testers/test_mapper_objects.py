@@ -1,9 +1,9 @@
 
-from mapper.mappers.dynamic_mapper import DynamicMapper
-from algo.routings.a_star import AstarRouting
+from mapp.mapper.mappers.dynamic_mapper import DynamicMapper
+from mapp.algo.routings.a_star import AstarRouting
 
-from mapper.map_types.mapper_types import Entity 
-from tester.builders_testers.generate_map import generate_map
+from mapp.mapper.map_types.mapper_types import Entity 
+from mapp.tester.builders_testers.generate_map import generate_map
 
 import asyncio 
 

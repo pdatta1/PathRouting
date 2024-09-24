@@ -1,6 +1,6 @@
 from typing import List, Tuple, Dict, Union
-from algo.algo_types.map_types import Node
-from algo.base.direction_base import DirectionProtocol
+from mapp.algo.algo_types.map_types import Node
+from mapp.algo.base.direction_base import DirectionProtocol
 
 class AisleDirections(DirectionProtocol):
     """

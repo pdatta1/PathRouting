@@ -1,6 +1,6 @@
 from typing import List
 from abc import abstractmethod, ABC
-from algo.algo_types.map_types import Map, Node
+from mapp.algo.algo_types.map_types import Map, Node
 
 class PathRoutingBase(ABC):
     """

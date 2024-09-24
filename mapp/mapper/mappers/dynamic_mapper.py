@@ -1,10 +1,10 @@
 
 from typing import Dict, List, Union
 
-from mapper.base.entity_base import MapperBase
-from mapper.map_types.mapper_types import Entity 
+from mapp.mapper.base.entity_base import MapperBase
+from mapp.mapper.map_types.mapper_types import Entity 
 
-from algo.base.routing_base import PathRoutingBase
+from mapp.algo.base.routing_base import PathRoutingBase
 
 
 class DynamicMapper(MapperBase): 

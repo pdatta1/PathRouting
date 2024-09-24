@@ -1,19 +1,19 @@
 from typing import List, Tuple, Dict
-from algo.base.routing_base import PathRoutingBase
-from algo.directions import RouteDirectionFactory
-from algo.directions import (
+from mapp.algo.base.routing_base import PathRoutingBase
+from mapp.algo.directions import RouteDirectionFactory
+from mapp.algo.directions import (
     AisleDirections, 
     LaneDirections,
     ElevationDirections
 )
-from algo.algo_types.map_types import Map, Node, Path
-from algo.algo_exceptions.route_exceptions import (
+from mapp.algo.algo_types.map_types import Map, Node, Path
+from mapp.algo.algo_exceptions.route_exceptions import (
     PathNotFoundException, 
     VTUNotFound,
     NotSameLevelRoutingException
 )
 
-from mapper.map_types.mapper_interfaces import MapNodeTypes
+from mapp.mapper.map_types.mapper_interfaces import MapNodeTypes
 
 
 import heapq
@@ -89,7 +89,7 @@ class AstarRouting(PathRoutingBase):
                 neighbor: Node = self._map.get_node_by_coords(neighbor_coords[0], neighbor_coords[1], neighbor_coords[2])
                 if neighbor:
                     neighbors.append(neighbor)
-        return neighbors
+        return neighbors + node.connections
 
     def find_path_on_same_level(self, current_node: Node, target_node: Node) -> Path:
         """
@@ -136,7 +136,7 @@ class AstarRouting(PathRoutingBase):
             closed_list.add(current_node.id)  # Mark current node as evaluated
 
             # Explore neighbors
-            for neighbor in self.get_neighbors(current_node):
+            for neighbor in current_node.connections:
                 if neighbor.id in closed_list:
                     continue  # Skip already evaluated nodes
 

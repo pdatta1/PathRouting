@@ -36,3 +36,6 @@ Clone the repository.
 Ensure you have Python 3.11+ installed.
 Implement additional routing algorithms by inheriting from PathRoutingBase in the base directory.
 Use the tester directory to write and execute test cases for the algorithms
+
+For visuals, you will have to run **python3 visuals/main.py** to execute your algorithms in a pygame visuals.
+you would need to alter the **visualization_manager.py** to get the specifics of routing.
