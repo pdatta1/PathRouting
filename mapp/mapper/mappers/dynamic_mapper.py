@@ -45,6 +45,6 @@ class DynamicMapper(MapperBase):
         self, 
         algorithm_identifier: str 
     ) -> Union[PathRoutingBase, None]: 
-        return self.__algorithms_registry.get(algorithm_identifier)
+        return self.__algorithms_registry.get(algorithm_identifier, None)
 
     

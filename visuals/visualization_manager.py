@@ -1,7 +1,7 @@
 import pygame
 import time  
 
-from mapp.algo.algo_types.map_types import Map, Node 
+from mapp.algo.algo_types.map_types import Map, Node, Coords 
 from mapp.mapper.map_types.mapper_objects_types import MapEntity
 from mapp.mapper.map_types.mapper_types import Entity
 from typing import List, Dict
@@ -21,6 +21,7 @@ from visuals.entity_visualization import (
     PalletEntityDrawStrategy,
     MapEntityDrawFactory,
 )
+from visuals.simulation import SimulationManager
 
 
 class VisualizationManager:
@@ -77,47 +78,32 @@ class VisualizationManager:
         if entity_strategy: 
             entity_strategy.draw(self.screen, entity, x_offset, y_offset, self.scale)
 
-    def visualize(self, mapper: DynamicMapper):
-        x_offset, y_offset = self.calculate_center_offset(mapper.entity.map)
-        target_robot = mapper.entity.get_entity('Robot1', 'robot')  # Get robot entity
-        start_loc = target_robot.entity_loc  # Start location of the robot
-        end_loc = mapper.entity.map.get_node_by_coords(7, 8, 0)  # Target location
+    def visualize(
+        self, 
+        simulation: SimulationManager, 
+    ):
+        x_offset, y_offset = self.calculate_center_offset(simulation.mapper.entity.map)
 
-        routing: AstarRouting = mapper.get_algorithm('a_star')
-        path = routing.find_path_on_same_level(start_loc, end_loc)  # Get path
 
-        if not path.nodes:
-            print("No path found")
-            return
-
-        self.screen.fill((255, 255, 255))
-
-        # Draw all map nodes
-        for node in mapper.entity.map.coordinates.values():
-            self.draw_node(node, x_offset, y_offset)
-
-        # Draw all entities
-        for entity_list in mapper.entity.map_entities.values():
-            for entity in entity_list:
-                self.draw_entity(entity, x_offset, y_offset)
-        # Main visualization loop
-        path_index = 0  # Track current position in the path
         while self.running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
 
+            self.screen.fill((255, 255, 255))
 
+            # Draw all map nodes
+            for node in simulation.mapper.entity.map.coordinates.values():
+                self.draw_node(node, x_offset, y_offset)
 
-            # Move the robot along the path
-            if path_index < len(path.nodes):
-                next_node = path.nodes[path_index]
-                target_robot.entity_loc = next_node  # Update robot location to next node
-                path_index += 1  # Move to the next node in the path
-
-            # Draw the robot in its new location
-            self.draw_entity(target_robot, x_offset, y_offset)
-
+            # Draw all entities
+            for entity_list in simulation.mapper.entity.map_entities.values():
+                for entity in entity_list:
+                    self.draw_entity(entity, x_offset, y_offset)
+            
+            simulation.run_simulation()
+                        
+            self.draw_entity(entity, x_offset, y_offset)
             pygame.display.flip()
             self.clock.tick(2)  # Adjust the speed (2 frames per second)
 

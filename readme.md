@@ -38,4 +38,6 @@ Implement additional routing algorithms by inheriting from PathRoutingBase in th
 Use the tester directory to write and execute test cases for the algorithms
 
 For visuals, you will have to run **python3 visuals/main.py** to execute your algorithms in a pygame visuals.
-you would need to alter the **visualization_manager.py** to get the specifics of routing.
+Inside main.py of visuals module, you can insert an entity into the mapper(Robots, VTU, Pallet, etc) with its coordinate.
+
+Using the simulation instance, you can add a simulation, allowing the robots to move around.

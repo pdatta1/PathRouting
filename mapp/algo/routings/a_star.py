@@ -153,7 +153,7 @@ class AstarRouting(PathRoutingBase):
         raise PathNotFoundException(f"Path from {current_node.coords} to {target_node.coords} is not possible")
     
     def find_path(self, current_node: Node, target_node: Node) -> List[Node]:
-        return super().find_path(current_node, target_node)
+        return self.find_path_on_same_level(current_node, target_node)
 
     def find_closest_vtu(self, start_node: Node) -> Node: 
         visited = set() 
