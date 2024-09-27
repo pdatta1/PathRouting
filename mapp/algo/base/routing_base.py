@@ -1,6 +1,7 @@
 from typing import List
 from abc import abstractmethod, ABC
-from mapp.algo.algo_types.map_types import Map, Node
+from mapp.algo.algo_types.map_types import Node
+from mapp.mapper.base.entity_base import Entity
 
 class PathRoutingBase(ABC):
     """
@@ -9,15 +10,15 @@ class PathRoutingBase(ABC):
     implement these methods to define their own pathfinding logic.
     """
 
-    def __init__(self, map: Map) -> None:
+    def __init__(self, entity: Entity) -> None:
         """
         Initializes the PathRoutingBase with a given map. The map contains the
         nodes and their relationships that the pathfinding algorithm will use.
 
         Args:
-            map (Map): The map on which pathfinding will be performed.
+            entity (Entity): The entity on which pathfinding will be performed.
         """
-        self._map = map
+        self.entity = entity
 
     @abstractmethod
     def heuristic(self, current_node: Node, target_node: Node) -> int:

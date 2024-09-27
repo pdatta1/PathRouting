@@ -5,7 +5,7 @@ from dataclasses import dataclass, field, MISSING
 from mapp.mapper.map_types.mapper_types import * 
 from mapp.mapper.map_types.mapper_objects_types import *
 
-from mapp.algo.algo_types.map_types import Map 
+from mapp.algo.algo_types.map_types import Map, Coords
 
 
 @dataclass
@@ -23,12 +23,14 @@ class Entity:
         self, 
         entity_id: str, 
         entity_type: str,
-        entity_loc: Node
+        entity_loc: Node,
+        static: bool = True,
     ) -> None: 
         map_entity_object = MapEntity(
             entity_id=entity_id,
             entity_type=entity_type,
-            entity_loc=entity_loc
+            entity_loc=entity_loc,
+            static=static
         )
         if entity_type in self.map_entities: 
             if not self.check_entity_duplicates(self.map_entities[entity_type], entity_id):
@@ -36,8 +38,6 @@ class Entity:
         else: 
             self.map_entities[entity_type] = [map_entity_object]
             
-            
-
     def remove_entity(self, entity_id: str, entity_type: str) -> None: 
         for key, value in self.map_entities.items(): 
             if key == entity_type: 
@@ -51,6 +51,6 @@ class Entity:
                 for entity in value: 
                     if entity.entity_id == entity_id: 
                         return entity 
-                    
+            
     def get_all_entities(self) -> Dict[str, List[MapEntity]] : 
         return self.map_entities

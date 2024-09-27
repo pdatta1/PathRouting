@@ -10,3 +10,4 @@ class MapEntity:
     entity_id: str = field(default=MISSING, compare=True)
     entity_type: str = field(default=MISSING)
     entity_loc: Node = field(default=MISSING)
+    static: bool = field(default=True)

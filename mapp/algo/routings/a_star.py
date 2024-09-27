@@ -6,7 +6,7 @@ from mapp.algo.directions import (
     LaneDirections,
     ElevationDirections
 )
-from mapp.algo.algo_types.map_types import Map, Node, Path
+from mapp.algo.algo_types.map_types import Map, Node, Path, Coords
 from mapp.algo.algo_exceptions.route_exceptions import (
     PathNotFoundException, 
     VTUNotFound,
@@ -14,6 +14,8 @@ from mapp.algo.algo_exceptions.route_exceptions import (
 )
 
 from mapp.mapper.map_types.mapper_interfaces import MapNodeTypes
+from mapp.mapper.map_types.mapper_types  import MapEntity
+from mapp.mapper.base.entity_base import Entity
 
 
 import heapq
@@ -28,7 +30,7 @@ class AstarRouting(PathRoutingBase):
     and computes the shortest path based on a heuristic function.
     """
 
-    def __init__(self, map: Map) -> None:
+    def __init__(self, entity: Entity) -> None:
         """
         Initializes the AstarRouting class with a provided map and sets up the
         direction registry using the factory pattern.
@@ -36,7 +38,7 @@ class AstarRouting(PathRoutingBase):
         Args:
             map (Map): The map on which the routing will be performed.
         """
-        self._map = map
+        self.entity = entity
         self._direction_registry_factory = RouteDirectionFactory()
         self.initialize_direction_registry()
 
@@ -85,11 +87,25 @@ class AstarRouting(PathRoutingBase):
         for direction in directions:
 
             neighbor_coords: Tuple[int, int] = (node.coords.x + direction[0], node.coords.y + direction[1], node.coords.z + direction[2])
-            if 0 <= neighbor_coords[0] < self._map.lanes_nums and 0 <= neighbor_coords[1] < self._map.aisle_nums and neighbor_coords[2] < self._map.level_nums :
-                neighbor: Node = self._map.get_node_by_coords(neighbor_coords[0], neighbor_coords[1], neighbor_coords[2])
+            if 0 <= neighbor_coords[0] < self.entity.map.lanes_nums and 0 <= neighbor_coords[1] < self.entity.map.aisle_nums and neighbor_coords[2] < self.entity.map.level_nums :
+                neighbor: Node = self.entity.map.get_node_by_coords(neighbor_coords[0], neighbor_coords[1], neighbor_coords[2])
                 if neighbor:
                     neighbors.append(neighbor)
         return neighbors + node.connections
+
+    def get_occupied_node_by_level(
+        self,
+        static: bool, 
+        level: int,
+    ) -> List[Node]: 
+        
+        occupied_coords: List[Coords] = [] 
+        for map_entities in self.entity.map_entities.values(): 
+            for map_entity in map_entities: 
+                if map_entity.static == static and map_entity.entity_loc.coords.z == level: 
+                    occupied_coords.append(map_entity.entity_loc)
+        return occupied_coords
+
 
     def find_path_on_same_level(self, current_node: Node, target_node: Node) -> Path:
         """
@@ -108,6 +124,8 @@ class AstarRouting(PathRoutingBase):
         """
         open_list: List[Tuple[int, Node]] = []  # Priority queue (min-heap) to track nodes to evaluate
         closed_list = set()  # Set of nodes that have already been evaluated
+
+        occupied_locations: List[Coords] = self.get_occupied_node_by_level(static=True, level=current_node.coords.z)
 
         node_relations: Dict[str, Node] = {}  # Dictionary to store node relationships (for path reconstruction)
         g_score: Dict[str, int] = {current_node.id: 0}  # Cost from start node to each node
@@ -139,6 +157,11 @@ class AstarRouting(PathRoutingBase):
             for neighbor in current_node.connections:
                 if neighbor.id in closed_list:
                     continue  # Skip already evaluated nodes
+
+                if neighbor in occupied_locations: 
+                    continue
+
+                
 
                 tentative_g_score = g_score[current_node.id] + 1  # Cost to reach neighbor
 
