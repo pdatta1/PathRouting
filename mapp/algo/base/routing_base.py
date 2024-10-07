@@ -1,7 +1,7 @@
 from typing import List
 from abc import abstractmethod, ABC
-from mapp.algo.algo_types.map_types import Node
-from mapp.mapper.base.entity_base import Entity
+from mapp.algo.algo_types.map_types import *
+from mapp.mapper.map_types.mapper_types import Entity 
 
 class PathRoutingBase(ABC):
     """
@@ -36,19 +36,6 @@ class PathRoutingBase(ABC):
         """
         pass
 
-    @abstractmethod
-    def get_neighbors(self, node: Node) -> List[Node]:
-        """
-        Abstract method to retrieve the neighboring nodes of a given node. These 
-        neighbors are determined based on the movement rules defined for the map.
-
-        Args:
-            node (Node): The node for which to find neighbors.
-
-        Returns:
-            List[Node]: A list of neighboring nodes.
-        """
-        pass
 
     @abstractmethod
     def find_path(self, current_node: Node, target_node: Node) -> List[Node]:

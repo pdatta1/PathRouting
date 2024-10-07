@@ -51,6 +51,20 @@ class Entity:
                 for entity in value: 
                     if entity.entity_id == entity_id: 
                         return entity 
+                    
+    def get_entity_by_node(self, node: Node, entity_type: str) -> Union[MapEntity, None]: 
+        for key, value in self.map_entities.items(): 
+            if key == entity_type: 
+                for entity in value: 
+                    if entity.entity_loc == node:
+                        return entity
+                    
+    def get_entity_by_coords(self, coords: Coords, entity_type: str) -> Union[MapEntity, None]: 
+        for key, value in self.map_entities.items(): 
+            if key == entity_type: 
+                for entity in value: 
+                    if entity.entity_loc.coords == coords: 
+                        return entity
             
     def get_all_entities(self) -> Dict[str, List[MapEntity]] : 
         return self.map_entities

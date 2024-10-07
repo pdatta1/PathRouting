@@ -21,7 +21,7 @@ async def main():
     async with mapper:
         mapper.register_algorithm('a_star', AstarRouting(mapper.entity))
         mapper.entity.insert_entity('Robot1', 'robot', grid_map.get_node_by_coords(2, 3, 0))
-        # mapper.entity.insert_entity('Robot2', 'robot', grid_map.get_node_by_coords(0, 3, 0))
+        mapper.entity.insert_entity('Robot2', 'robot', grid_map.get_node_by_coords(0, 3, 0))
 
         # mapper.entity.insert_entity('VTU1', 'vtu', grid_map.get_node_by_coords(6, 3, 0))
 
@@ -36,7 +36,8 @@ async def main():
         mapper.entity.insert_entity('Pallet9', 'pallet', grid_map.get_node_by_coords(6, 5, 0))
 
         try:
-            simulation.add_simulation('Robot1', 'robot', 'a_star', Coords(0, 6, 0))
+            simulation.add_simulation('Robot1', 'robot', 'a_star', Coords(7, 0, 0))
+            simulation.add_simulation('Robot2', 'robot', 'a_star', Coords(0, 8, 0))
             # simulation.add_simulation('Robot2', 'robot', 'a_star', Coords(4, 8, 0))
         except Exception as exc: 
             print(exc)

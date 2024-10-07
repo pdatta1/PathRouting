@@ -171,9 +171,5 @@ class Map:
             int: The number of nodes in the map.
         """
         return len(self.coordinates)
+    
 
-
-@dataclass
-class Path: 
-    nodes: List[Node]
-    computation_time: float 

@@ -1,26 +1,32 @@
 from typing import List, Tuple, Dict
-from mapp.algo.base.routing_base import PathRoutingBase
+from dataclasses import dataclass
+
+from mapp.algo.base.routing_base import (
+    PathRoutingBase, 
+    Entity, 
+    Node, 
+    Coords,
+    Map,
+)
+from mapp.algo.algo_types.route_types import Path, PathState
 from mapp.algo.directions import RouteDirectionFactory
 from mapp.algo.directions import (
     AisleDirections, 
     LaneDirections,
     ElevationDirections
 )
-from mapp.algo.algo_types.map_types import Map, Node, Path, Coords
 from mapp.algo.algo_exceptions.route_exceptions import (
     PathNotFoundException, 
     VTUNotFound,
     NotSameLevelRoutingException
 )
-
 from mapp.mapper.map_types.mapper_interfaces import MapNodeTypes
-from mapp.mapper.map_types.mapper_types  import MapEntity
-from mapp.mapper.base.entity_base import Entity
 
 
 import heapq
 import time 
 from collections import deque
+
 
 class AstarRouting(PathRoutingBase):
     """
@@ -40,17 +46,6 @@ class AstarRouting(PathRoutingBase):
         """
         self.entity = entity
         self._direction_registry_factory = RouteDirectionFactory()
-        self.initialize_direction_registry()
-
-    def initialize_direction_registry(self) -> None:
-        """
-        Initializes the direction registry by registering protocols for Aisle
-        and Lane navigation. This allows the class to handle different movement
-        behaviors based on node types.
-        """
-        self._direction_registry_factory.register_direction_protocol(MapNodeTypes.Aisle.value, AisleDirections())
-        self._direction_registry_factory.register_direction_protocol(MapNodeTypes.Lane.value, LaneDirections())
-        self._direction_registry_factory.register_direction_protocol(MapNodeTypes.VTU.value, ElevationDirections())
 
     def heuristic(self, current_node: Node, target_node: Node) -> int:
         """
@@ -65,47 +60,19 @@ class AstarRouting(PathRoutingBase):
             int: The heuristic distance from the current node to the target node.
         """
         return abs(current_node.coords.x - target_node.coords.x) + abs(current_node.coords.y - target_node.coords.y) + abs(current_node.coords.z - target_node.coords.z)
-
-    def get_neighbors(self, node: Node) -> List[Node]:
-        """
-        Retrieves the neighboring nodes of a given node based on the registered
-        direction protocol. The direction can vary depending on the node type 
-        (Aisle or Lane).
-
-        Args:
-            node (Node): The node for which to find neighbors.
-
-        Returns:
-            List[Node]: A list of neighboring nodes.
-        """
-        neighbors: List[Node] = []
-
-        direction_protocol = self._direction_registry_factory.get_direction_protocol(node.node_type)
-        directions = direction_protocol.get_directions()
-
-        # Calculate neighbors based on valid movement directions
-        for direction in directions:
-
-            neighbor_coords: Tuple[int, int] = (node.coords.x + direction[0], node.coords.y + direction[1], node.coords.z + direction[2])
-            if 0 <= neighbor_coords[0] < self.entity.map.lanes_nums and 0 <= neighbor_coords[1] < self.entity.map.aisle_nums and neighbor_coords[2] < self.entity.map.level_nums :
-                neighbor: Node = self.entity.map.get_node_by_coords(neighbor_coords[0], neighbor_coords[1], neighbor_coords[2])
-                if neighbor:
-                    neighbors.append(neighbor)
-        return neighbors + node.connections
-
-    def get_occupied_node_by_level(
+         
+    def get_occupied_nodes_by_level(
         self,
         static: bool, 
         level: int,
     ) -> List[Node]: 
         
-        occupied_coords: List[Coords] = [] 
-        for map_entities in self.entity.map_entities.values(): 
-            for map_entity in map_entities: 
-                if map_entity.static == static and map_entity.entity_loc.coords.z == level: 
-                    occupied_coords.append(map_entity.entity_loc)
-        return occupied_coords
-
+        return [
+            map_entity.entity_loc
+            for map_entities in self.entity.map_entities.values()
+            for map_entity in map_entities
+            if map_entity.entity_loc.coords.z == level and map_entity.static == static 
+        ]
 
     def find_path_on_same_level(self, current_node: Node, target_node: Node) -> Path:
         """
@@ -125,7 +92,7 @@ class AstarRouting(PathRoutingBase):
         open_list: List[Tuple[int, Node]] = []  # Priority queue (min-heap) to track nodes to evaluate
         closed_list = set()  # Set of nodes that have already been evaluated
 
-        occupied_locations: List[Coords] = self.get_occupied_node_by_level(static=True, level=current_node.coords.z)
+        occupied_locations: List[Node] = self.get_occupied_nodes_by_level(static=True, level=current_node.coords.z)
 
         node_relations: Dict[str, Node] = {}  # Dictionary to store node relationships (for path reconstruction)
         g_score: Dict[str, int] = {current_node.id: 0}  # Cost from start node to each node
@@ -148,7 +115,8 @@ class AstarRouting(PathRoutingBase):
                 constructed_path: List[Node] = self.reconstruct_path(node_relations, current_node)
                 return Path(
                     nodes=constructed_path,
-                    computation_time=total_compute_time
+                    computation_time=total_compute_time,
+                    obstacles=occupied_locations
                 )
 
             closed_list.add(current_node.id)  # Mark current node as evaluated
@@ -161,7 +129,6 @@ class AstarRouting(PathRoutingBase):
                 if neighbor in occupied_locations: 
                     continue
 
-                
 
                 tentative_g_score = g_score[current_node.id] + 1  # Cost to reach neighbor
 
@@ -189,7 +156,7 @@ class AstarRouting(PathRoutingBase):
             
             visited.add(current_node.id)
 
-            neighbors = self.get_neighbors(current_node)
+            neighbors = current_node.connections
             for neighbor in neighbors: 
                 if neighbor.id not in visited and neighbor not in queue: 
                     queue.append(neighbor)

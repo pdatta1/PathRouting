@@ -46,9 +46,10 @@ class SimulationManager:
         
 
     def run_simulation(
-        self
+        self, 
     ) -> None: 
         for simulation in self.simulations: 
+            # print(f"Computation Time: [{simulation.entity.entity_id}] ---> {simulation.path.computation_time}")
             if simulation.path_progress < len(simulation.path.nodes): 
                 next_node = simulation.path.nodes[simulation.path_progress]
                 simulation.entity.entity_loc = next_node 

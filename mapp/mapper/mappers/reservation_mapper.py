@@ -1,5 +1,5 @@
 
-from typing import Dict, List, Union
+from typing import Dict, Union 
 
 from mapp.mapper.base.entity_base import MapperBase
 from mapp.mapper.map_types.mapper_types import Entity 
@@ -7,27 +7,18 @@ from mapp.mapper.map_types.mapper_types import Entity
 from mapp.algo.base.routing_base import PathRoutingBase
 
 
-class DynamicMapper(MapperBase): 
+class ReservationMapperV1(MapperBase): 
 
     def __init__(self, entity: Entity) -> None:
-
         self.entity = entity 
-
         self.__algorithms_registry: Dict[str, PathRoutingBase] = {} 
 
-
-    def create_entity(self) -> Entity:
+    def create_entity(self) -> None:
         return super().create_entity()
     
     def cleanup_context(self) -> None:
         return super().cleanup_context()
-
-    def __enter__(self) -> None: 
-        self.create_entity()
-
-    def __exit__(self, exc_type, exc_value, traceback) -> None: 
-        self.cleanup_context()
-
+    
     def register_algorithm(
         self, 
         algorithm_identifier: str, 
@@ -46,5 +37,3 @@ class DynamicMapper(MapperBase):
         algorithm_identifier: str 
     ) -> Union[PathRoutingBase, None]: 
         return self.__algorithms_registry.get(algorithm_identifier, None)
-
-    

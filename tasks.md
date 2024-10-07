@@ -14,3 +14,5 @@ Routing Single Floor Bias:
 
 
     - I want to have my algorithm acknowledge a node is blocked (meaning there's an entity placed in that path)
+
+    - building a seperate algorithm to fit in a multi agent path planning.
