@@ -4,10 +4,12 @@ from dataclasses import dataclass
 
 from mapp.tester.builders_testers.generate_map import generate_map
 from mapp.algo.routings.a_star import AstarRouting, Entity, Map, Node, Path
+from mapp.algo.routings.mapp_astar import MappAstar
 from mapp.mapper.map_types.mapper_objects_types import MapEntity
 from mapp.mapper.mappers.dynamic_mapper import DynamicMapper
 
 import random 
+import traceback
 
 """
 grid_map = generate_map(10, 1)
@@ -54,6 +56,7 @@ class AStarPlayground:
     
     def register_algorithms(self) -> None:
         self.mapper.register_algorithm('a_star', AstarRouting(self.mapper.entity))
+        self.mapper.register_algorithm('mapp_astar', MappAstar(self.mapper.entity))
 
     def get_random_node(self) -> Union[Node, None]: 
         return random.choice(list(self.mapper.entity.map.coordinates.values()))
@@ -79,7 +82,7 @@ class AStarPlayground:
         if not target_node:
             raise Exception(f'Cannot find Location x={target_coords[0]}, y={target_coords[1]}, z={target_coords[2]} in map')
         
-        path: Path = self.mapper.get_algorithm('a_star').find_path(entity.entity_loc, target_node)
+        path: Path = self.mapper.get_algorithm('mapp_astar').find_path(entity.entity_loc, target_node)
         if path: 
             for x in range(len(path.nodes) - 1): 
                 print(f"{path.nodes[x].coords} ---> {path.nodes[x + 1].coords}")
@@ -115,6 +118,7 @@ def main():
         playground.get_path_for_entity('robot_4', 'robot', (3, 7, 0))
     except Exception as exc: 
         print(f"Exception Occurred: {exc}")
+        print(f"Traceback: {traceback.print_exc()}")
     
 
 

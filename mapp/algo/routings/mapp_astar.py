@@ -12,6 +12,7 @@ from mapp.algo.base.routing_base import (
 )
 from mapp.algo.reservations.reservation_v1 import ReservationTableV1
 from mapp.algo.algo_types.route_types import Path, PathState
+from mapp.algo.algo_exceptions.route_exceptions import PathNotFoundException
 
 class MappAstar(PathRoutingBase): 
 
@@ -35,12 +36,15 @@ class MappAstar(PathRoutingBase):
             if map_entity.entity_loc.coords.z == level and map_entity.static == static 
         ]
 
+
     def heuristic(self, current_node: Node, target_node: Node) -> int:
         return abs(current_node.coords.x - target_node.coords.x) + abs(current_node.coords.y - target_node.coords.y) + abs(current_node.coords.z - target_node.coords.z)
     
+
     def find_path(self, current_node: Node, target_node: Node) -> List[Node]:
         
-        open_list: List[Tuple[int, PathState]] = [] 
+        open_list: List[PathState] = [] 
+        open_set = set() 
         closed_list = set() 
 
         obstacles: List[Node] = self.get_occupied_nodes_by_level(static=True, level=current_node.coords.z)
@@ -48,6 +52,8 @@ class MappAstar(PathRoutingBase):
             x=current_node.coords.x, 
             y=current_node.coords.y, 
             z=current_node.coords.z, 
+            id=current_node.id,
+            f_score=0,
             time=0
         )
 
@@ -56,11 +62,15 @@ class MappAstar(PathRoutingBase):
 
         total_compute_time: float = 0.0 
 
-        heapq.heappush(open_list, (0, path_state))
+        heapq.heappush(open_list, path_state)
+        open_set.add(path_state.id)
+
         start_time_compute: float = time.perf_counter() 
 
         while open_list: 
-            _, current_state = heapq.heappop(open_list)
+            current_state = heapq.heappop(open_list)
+
+            open_set.remove(current_state.id)
 
             if current_state.id == target_node.id: 
                 end_time_compute: float = time.perf_counter() 
@@ -87,32 +97,29 @@ class MappAstar(PathRoutingBase):
                     node_relations[neighbor.id] = current_node
                     g_score[neighbor.id] = tentative_g_score
                     f_score: int = tentative_g_score + self.heuristic(neighbor, target_node)
-                    heapq.heappush(open_list, (f_score, neighbor))
 
-                new_state = PathState(
-                    x=current_state.x,
-                    y=current_state.y, 
-                    z=current_state.z, 
-                    id=current_state.id,
-                    time=current_state.time + 1
-                )
+                    new_state = PathState(
+                        x=neighbor.coords.x,
+                        y=neighbor.coords.y, 
+                        z=neighbor.coords.z, 
+                        id=neighbor.id,
+                        time=current_state.time + 1,
+                        f_score=f_score
+                    )
 
-                if self.reservation.is_reserved(
-                    time=new_state.time,
-                    x=new_state.x, 
-                    y=new_state.y,
-                    z=new_state.z 
-                ): 
-                    continue
+                    if self.reservation.is_reserved(
+                        time=new_state.time,
+                        x=new_state.x, 
+                        y=new_state.y,
+                        z=new_state.z 
+                    ): 
+                        continue
 
-                if new_state not in open_list: 
-                    cost = new_state.time 
-                    heapq.heappush(open_list, (cost, new_state))
+                    if new_state.id not in open_set: 
+                        heapq.heappush(open_list, path_state)
+                        open_set.add(new_state.id)
 
-
-
-
-            
+        raise PathNotFoundException(f"Path from {current_node.coords} to {target_node.coords} is not possible")
     
     
     def reconstruct_path(
